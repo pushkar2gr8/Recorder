@@ -70,4 +70,9 @@ public class Recordingservice extends Service {
         mediaRecorder = null;
 
     }
+
+    @Override
+    public void onDestroy() {
+
+    }
 }

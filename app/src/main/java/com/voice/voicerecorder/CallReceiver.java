@@ -3,6 +3,7 @@ package com.voice.voicerecorder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaRecorder;
 import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
@@ -13,12 +14,16 @@ public class CallReceiver extends BroadcastReceiver {
     String savedNumber;
     int state = 5;
 
+    MediaRecorder mMediaRecorder = new MediaRecorder();
+
     private static int lastState = TelephonyManager.CALL_STATE_IDLE;
     private static Date callStartTime;
     private static boolean isIncoming;
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
+        mMediaRecorder =null;
         try{
             if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
                 savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
@@ -31,7 +36,8 @@ public class CallReceiver extends BroadcastReceiver {
                 if(stateStr.equals(TelephonyManager.EXTRA_STATE_IDLE)){
                     if(state !=0){
                         new FileWriter().writer(number, new Date().toString(),callStartTime.toString());
-                        new Recordingservice().stop_recording();
+                        stop_recorder(context);
+                        //new Recordingservice().stop_recording();
                     }
                     state = TelephonyManager.CALL_STATE_IDLE;
                 }
@@ -88,24 +94,27 @@ public class CallReceiver extends BroadcastReceiver {
                 }
                 else if(isIncoming){
 
-                    String calldetails = "incoming"+number;
+                    String calldetails = "incoming:"+number;
                     Toast.makeText(context, "Incoming " +
                             number + " Call time " +
                             callStartTime  + new Date()
                             , Toast.LENGTH_LONG).show();
                     new FileWriter().writer(calldetails, new Date().toString(),callStartTime.toString());
-                    new Recordingservice().stop_recording();
+                    stop_recorder(context);
+                    //new Recordingservice().stop_recording();
 
                 }
                 else{
                     String calldetails = "outgoing"+number;
+                    System.out.print(""+calldetails);
                     Toast.makeText(context, "outgoing " +
                             number + " Call time " +
                             callStartTime +" Date " + new Date() ,
                             Toast.LENGTH_LONG).show();
 
                     new FileWriter().writer(calldetails, new Date().toString(),callStartTime.toString());
-                    new Recordingservice().stop_recording();
+                    stop_recorder(context);
+//                    new Recordingservice().stop_recording();
 
                 }
 
@@ -125,5 +134,9 @@ public class CallReceiver extends BroadcastReceiver {
         };
         t.start();
 
+    }
+
+    public void stop_recorder(Context context){
+        context.stopService(new Intent(context, Recordingservice.class));
     }
 }
