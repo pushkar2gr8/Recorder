@@ -35,7 +35,6 @@ public class CallReceiver extends BroadcastReceiver {
 
                 if(stateStr.equals(TelephonyManager.EXTRA_STATE_IDLE)){
                     if(state !=0){
-                        new FileWriter().writer(number, new Date().toString(),callStartTime.toString());
                         stop_recorder(context);
                         //new Recordingservice().stop_recording();
                     }
@@ -86,11 +85,14 @@ public class CallReceiver extends BroadcastReceiver {
 
                 //Went to idle-  this is the end of a call.  What type depends on previous state(s)
                 if(lastState == TelephonyManager.CALL_STATE_RINGING){
+                    String calldetails = "missed call:"+number;
                     //Ring but no pickup-  a miss
                     Toast.makeText(context, "Ringing but no pickup" +
                             number + " Call time " +
                             callStartTime +" Date " + new Date() ,
                             Toast.LENGTH_LONG).show();
+                    fileWrite(context,calldetails, callStartTime.toString() ,new Date().toString());
+                    stop_recorder(context);
                 }
                 else if(isIncoming){
 
@@ -99,7 +101,7 @@ public class CallReceiver extends BroadcastReceiver {
                             number + " Call time " +
                             callStartTime  + new Date()
                             , Toast.LENGTH_LONG).show();
-                    new FileWriter().writer(calldetails, new Date().toString(),callStartTime.toString());
+                    fileWrite(context,calldetails, callStartTime.toString() ,new Date().toString());
                     stop_recorder(context);
                     //new Recordingservice().stop_recording();
 
@@ -111,8 +113,7 @@ public class CallReceiver extends BroadcastReceiver {
                             number + " Call time " +
                             callStartTime +" Date " + new Date() ,
                             Toast.LENGTH_LONG).show();
-
-                    new FileWriter().writer(calldetails, new Date().toString(),callStartTime.toString());
+                    fileWrite(context,calldetails, callStartTime.toString() ,new Date().toString());
                     stop_recorder(context);
 //                    new Recordingservice().stop_recording();
 
@@ -125,15 +126,26 @@ public class CallReceiver extends BroadcastReceiver {
 
     public void callrecord(final Context context, final String number){
 
-        Thread t = new Thread(){
-            public void run(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
                 Intent i =  new Intent(context,Recordingservice.class);
                 i.putExtra("CallingNumber", number);
                 context.startService(i);
             }
-        };
-        t.start();
+        }).start();
 
+    }
+
+    public void fileWrite(final Context context, final String calldetails, final String date, final String callstarttime ){
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                DataWorker mDataWorker = new DataWorker(calldetails,date,callstarttime);
+                mDataWorker.execute();
+            }
+        }).start();
     }
 
     public void stop_recorder(Context context){

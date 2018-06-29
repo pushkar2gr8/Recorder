@@ -1,0 +1,17 @@
+{
+  "Version": "1.0",
+  "CredentialsProvider": {
+    "CognitoIdentity": {
+      "Default": {
+        "accessKeyId":"AKIAIZJPDLKROWG3TH6Q",
+        "secretAccessKey":"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",
+        "Region": "us-east-2"
+      }
+    }
+  },
+  "IdentityManager" : {
+    "Default" : {
+
+    }
+  }
+}

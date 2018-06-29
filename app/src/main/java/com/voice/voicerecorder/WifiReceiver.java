@@ -41,10 +41,10 @@ public class WifiReceiver extends BroadcastReceiver {
             if(contents.length!=0 ){
                 try {
                     Thread.sleep(4000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    new FileUpload().execute();
+                } catch (Exception e) {
+                    System.out.println("Exception::"+e);
                 }
-                new FileUpload().execute();
             }
         }
     }
