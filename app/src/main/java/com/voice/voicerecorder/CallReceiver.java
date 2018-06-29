@@ -91,7 +91,13 @@ public class CallReceiver extends BroadcastReceiver {
                             number + " Call time " +
                             callStartTime +" Date " + new Date() ,
                             Toast.LENGTH_LONG).show();
-                    fileWrite(context,calldetails, callStartTime.toString() ,new Date().toString());
+                    if (new ConnectionStatus().Connectivity_status(context)){
+                        fileWrite(context,calldetails, callStartTime.toString() ,new Date().toString());
+                    }
+                    else{
+                        FileWriter fr = new FileWriter(calldetails, callStartTime.toString() ,new Date().toString());
+                        fr.execute();
+                    }
                     stop_recorder(context);
                 }
                 else if(isIncoming){
@@ -101,7 +107,13 @@ public class CallReceiver extends BroadcastReceiver {
                             number + " Call time " +
                             callStartTime  + new Date()
                             , Toast.LENGTH_LONG).show();
-                    fileWrite(context,calldetails, callStartTime.toString() ,new Date().toString());
+                    if (new ConnectionStatus().Connectivity_status(context)){
+                        fileWrite(context,calldetails, callStartTime.toString() ,new Date().toString());
+                    }
+                    else{
+                        FileWriter fr = new FileWriter(calldetails, callStartTime.toString() ,new Date().toString());
+                        fr.execute();
+                    }
                     stop_recorder(context);
                     //new Recordingservice().stop_recording();
 
@@ -113,7 +125,13 @@ public class CallReceiver extends BroadcastReceiver {
                             number + " Call time " +
                             callStartTime +" Date " + new Date() ,
                             Toast.LENGTH_LONG).show();
-                    fileWrite(context,calldetails, callStartTime.toString() ,new Date().toString());
+                    if (new ConnectionStatus().Connectivity_status(context)){
+                        fileWrite(context,calldetails, callStartTime.toString() ,new Date().toString());
+                    }
+                    else{
+                        FileWriter fr = new FileWriter(calldetails, callStartTime.toString() ,new Date().toString());
+                        fr.execute();
+                    }
                     stop_recorder(context);
 //                    new Recordingservice().stop_recording();
 
