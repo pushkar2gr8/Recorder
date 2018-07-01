@@ -45,10 +45,13 @@ public class Recordingservice extends Service {
 
     public void MediaRecorderReady(String number){
         mediaRecorder=new MediaRecorder();
-        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.VOICE_COMMUNICATION);
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
-        mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.DEFAULT);
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.VOICE_RECOGNITION);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.MPEG_4);
+        mediaRecorder.setAudioEncodingBitRate(32);
+        mediaRecorder.setAudioSamplingRate(44100);
         mediaRecorder.setOutputFile(Environment.getExternalStorageDirectory()+"/"+"Recordings/"+number+".mp3");
+
         start_recording();
     }
 
